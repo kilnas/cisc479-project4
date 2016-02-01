@@ -1,11 +1,19 @@
 
+
+var myDB = new Firebase('https://cisc479-project4.firebaseio.com/');
+    myDB.on("value", function(snapshot){
+      var theData = snapshot.val();
+      
+    });
+    
+    
 var postList =[];
 
 
 
-var postListTest = [{id: 2, title: 'TITLE1', content: 'CONENT1'}, {id: 3, title: 'TITLE2', content: 'CONENT2'}];
+var postListTest = [{id: 1, title: 'TITLE1', content: 'CONENT1'}, {id: 2, title: 'TITLE2', content: 'CONENT2'}];
 
-var postTest = {id: 1, title: "testtitle", content: 'testcontent', date: new Date()};
+var postTest = {id: 3, title: "testtitle", content: 'testcontent', date: new Date()};
 
 
 var Post = function(id, title, content, author){
@@ -31,7 +39,8 @@ var postbody = document.querySelector('.postbody');//preview text
 var posttitle = document.querySelector('.posttitle');
 var posttext = document.querySelector('.posttext');//full text
 
-var postListContainer = document.querySelector('.container');
+var container = document.querySelector('.container');
+
 
 //MODEl----------------------------------------------------------------------------------------
 //create post & add to postList
@@ -87,7 +96,7 @@ var renderSinglePost = function(post){
 
 
 // renders full* single view page including view post list button and title
-var singlePageView = function(post){
+var singlePostView = function(post){
     var $blogTitle = document.createElement('h1');
     $blogTitle.innerHTML="blog title*"
     $blogTitle.classList.add('blogtitle');
@@ -96,7 +105,7 @@ var singlePageView = function(post){
     var $switchbutton = document.createElement("button");
     $switchbutton.type ="button";
     $switchbutton.innerHTML = "switch button";
-    $switchbutton.addEventListener('click', function(e){
+    $switchbutton.addEventListener('click', function(e){ //idk if need seperate to controller
         console.log("oh");
         switchpage("#somethinglater");
     });
@@ -108,13 +117,15 @@ var singlePageView = function(post){
 
 
 //make post preview module
-var makePreview = function(post){
+var makePreview = function(post, postListContainer){
     var postDiv = document.createElement("DIV");
     postDiv.className = "post";
     var headDiv = document.createElement("DIV");
     headDiv.className = "posthead";
     var link = document.createElement("a");
-    link.setAttribute("href", "#"); //update later..
+    link.setAttribute("href", post.id.toString()); //update later..
+    postDiv.setAttribute('id', "#id" + post.id.toString());
+    
     var h2 = document.createElement("h2");
     var title = document.createTextNode(post.title);
     
@@ -133,28 +144,85 @@ var makePreview = function(post){
     postDiv.appendChild(headDiv);
     postDiv.appendChild(bodyDiv);
     postListContainer.appendChild(postDiv);
+ 
 };
 
 
 //render post list
 var renderPostList = function(postList){
+    var postListContainer = document.createElement("div");
+    postListContainer.setAttribute('id', '#postListContainer');
+    container.appendChild(postListContainer);
     for(var i = 0; i<postList.length; i++){
         //console.log(postListTest[i].title);
-        makePreview(postList[i]);
+        makePreview(postList[i], postListContainer);
     }
 };
 
+
+
+var createPostListeners = function(postList){ // move later to controller
+
+
+    for(var i = 0; i<postList.length; i++){
+        var $postId = "#id" + postList[i].id.toString();
+        //console.log($postId);
+        var $post = document.querySelector($postId);
+        
+         document.addEventListener('DOMContentLoaded', function(){
+             console.log("dom load");
+            $post.addEventListener('click', function(){
+                console.log("4$$$" + $postId);
+                //var $individualPost = document.getElementById($postId);
+                singlePostView(postList[i]);
+            });
+         });
+         
+    }
+    
+    
+   /* cool person way
+   var theParent = document.querySelector(".container");
+    theParent.addEventListener("click", postListEventHandler(), false);
+    */
+    
+};
+
+
+
+/*
+var postListEventHandler = function(e){
+    if (e.target !== e.currentTarget) {
+        var clickedItem = e.target.id;
+        alert("Hello " + clickedItem);
+    };
+    e.stopPropagation();
+   
+};
+*/
+
+
+
+function doSomething(e) {
+    if (e.target !== e.currentTarget) {
+        var clickedItem = e.target.id;
+        alert("Hello " + clickedItem);
+    }
+    e.stopPropagation();
+}
 
 // renders full* postlist view page including title and other elements if need
 var postListView = function(postList){
     
     var $blogTitle = document.createElement('h1');
-    $blogTitle.innerHTML="multipost blog title"
+    $blogTitle.innerHTML="multipost blog title";
     $blogTitle.classList.add('blogtitle');
     document.querySelector('.container').appendChild($blogTitle);
     renderPostList(postList);
+    createPostListeners(postList);
     
-}
+    
+};
 
 
 
@@ -225,5 +293,5 @@ var switchpage = function(id){ // figure out if want switch by name or id
 }
 
 
-//singlePageView(postTest);
+singlePostView(postTest);
 
