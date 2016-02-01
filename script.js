@@ -3,7 +3,7 @@
 var myDB = new Firebase('https://cisc479-project4.firebaseio.com/');
     myDB.on("value", function(snapshot){
       var theData = snapshot.val();
-      
+      //document.body.innerHTML = JSON.stringify(theData);
     });
     
     
@@ -82,12 +82,7 @@ var renderSinglePost = function(post){
     $posttitle.appendChild(title);
     $posttextDiv.appendChild(text);
     $postdate.appendChild(date);
-    
-    //document.querySelector('#fullpost').appendChild($posttitle);
-    //document.querySelector('#fullpost').appendChild($posttextDiv);
-    //document.querySelector('#fullpost').appendChild($postdate);
-    
-    
+
     document.querySelector('.container').appendChild($posttitle);
     document.querySelector('.container').appendChild($posttextDiv);
     document.querySelector('.container').appendChild($postdate);
@@ -266,18 +261,6 @@ document.querySelector('#addPost').addEventListener('click', overlay);
 
 //renderPostList(postList);
 //renderSinglePost(postTest);
-
-//idk
-/*
-var switchpage2 = function(id){
-  var oldbody = document.body.innerHTML;
-  document.body.innerHTML = "";
-    var $fullpost = document.querySelector("#fullpost");
-    var $container = document.createElement("div");
-
-  $fullpost.appendChild($container);
-}
-*/
 
 
 
