@@ -1,24 +1,58 @@
-
 var myDB = new Firebase('https://cisc479-project4.firebaseio.com/');
-
-
-    myDB.on("value", function(snapshot){
-      var theData = snapshot.val();
-      console.log("DB - TheDATA: " + JSON.stringify(theData));
+/*
+where "thing" = {number: 1} and "ss"(snapshot) = [{SLKFJSDLK: {number: 1}}, {DSKSKLF: {number:2}},....]
+var myDB = new Firebase("https://cse.firebaseio.com/");
+myDB.on('value', function(ss){
+    ss.forEach(function(thing){
+        document.querySelector('div').innerHTML += thing.val().number;
     });
+});
+*/
 
-var updateDB = function(post){
-   //myDB.set({'posts': postList});
-   //for(int i=0; i<posts.le)
-   myDB.child('posts').push(post);
-};
-
-    
 var postList =[];
 
 var PREVIEWCHARLIMIT = 100;
 
 var postLID = postList.length;
+
+var postListLoaded = false;
+
+//Load posts to array from database
+//**note: postLID must be initialized before loading
+myDB.child('posts').on("value", function(snapshot){
+     if (!postListLoaded){
+        initializePostListFromDB(snapshot);     
+     }
+     console.log("DB POSTS: " + snapshot.val());
+});
+
+
+var addPostToDB = function(post){
+   //var id = post.id.toString();
+   //myDB.child('posts').set({id : post});
+   myDB.child('posts').push(post);
+};
+
+var deletePostFromDB = function(post){
+    myDB.child('posts').once("value", function(snapshot){
+        snapshot.forEach(function(item){
+        console.log("searching for " + post.title + ", id: " + post.id)
+           console.log("looking at " + item.val().title + ", id: " + item.val().id);
+           if(item.val().title == post.title){
+               console.log("FOUND ITEM !!!!! " + item.val().title);
+               console.log("going to remove " + item.key());
+                myDB.child('posts/' + item.key()).remove();
+                console.log("removed item");
+                //alert(post.title+" has been deleted from the database");
+           }
+        });
+    });
+}
+
+
+
+    
+
 
 var Post = function(id, title, content, author){
     this.id = postLID;
@@ -26,9 +60,6 @@ var Post = function(id, title, content, author){
     this.content = content;
     this.author = author;
     this.date = new Date; // figure out date function
-    //maybe id number later
-    
-    
 };
 
 Post.prototype.toString = function(){
@@ -79,60 +110,66 @@ var container = document.querySelector('.container');
 
 
 //MODEl----------------------------------------------------------------------------------------
-//create post & add to postList
+//create post & add to postList, then rerender list
+//called when user creates a post
 var addPost = function(id, title, content, author){
     var newPost = new Post(id, title, content, author);
-    console.log("[New Post " + newPost.title + ", " + newPost.content + ", " + newPost.author + "]");
-    console.log("PostList BEFORE: " + postList);
-    //console.log("PostListTest BEFORE: " + postListTest);
     postList.push(newPost);
-    //postListTest.push(newPost);
-    console.log("PostList: " + postList);
-    //console.log("PostListTest: " + postListTest);
-    updateDB(newPost);
+    addPostToDB(newPost);
     container.innerHTML = '';
-    postListView(postList); //causing problem?
+    postListView(postList);
     postLID ++;
 }
 
-//add post to array from JSON object
+//called on page load to populate js postList from DB
+var initializePostListFromDB = function(snapshot){
+    //make new Post object for each DB post and push to PostList array
+    snapshot.forEach(function(item){
+        loadPostFromJSON(item.val());
+    });
+    postListLoaded = true;
+    //draw PostList
+    container.innerHTML = '';
+    postListView(postList);
+    console.log("---------loaded postList");    
+}
+
+
+//add post to array from JSON object (for loading DB posts only -- does NOT rerender list)
 var loadPostFromJSON = function(object){
     if ("author" in object && "title" in object && "content" in object && "id" in object){
-        addPost(object.id, object.title, object.content, object.author);
+        postList.push(new Post(object.id, object.title, object.content, object.author));
+        postLID ++;
     }
     else{
         console.log("JSON object missing some Post attribute. Did not addPost for this object.");
     }
 }
 
-//load all posts to array from DB list
-var loadPostsFromDB = function(){
-    var DBlist = myDB.child('posts');
-    console.log("loading posts from DB....");
-    console.log(DBlist.length);
-    for(var i=0; i < DBlist.length; i++){
-        console.log("entering DBList");
-        var obj = DBlist[i];
-        console.log(JSON.stringify(obj));
-        loadPostFromJSON(obj);
-        console.log("loaded a post");
-    }
-    console.log("finished loading posts");
+
+//delete post
+var deletePost = function(post){
+    console.log("post id =" +post.id);
+    
+    alert(post.title+" has been deleted");       
+    deletePostFromDB(post);
+    postList.splice(post.id,1);
+ 
+    console.log("deleted id="+post.id);
+    //go back to homepage after deletion
+    homepage(postList);
+
+    
 };
 
 
-//delete post
-var deletePost = function(i){
-    postList.splice(i,1);
-    //delete from database *****
-}
 
 //edit post ?
 
 
 //VIEW-----------------------------------------------------------------------------------------
 
-//render single post preview
+//render single full post view
 var renderSinglePost = function(post){
     var $posttitle = document.createElement("H1");
     $posttitle.className = "posttitle";
@@ -140,11 +177,11 @@ var renderSinglePost = function(post){
     $posttextDiv.className = "posttext";
     var $postdate = document.createElement("P");
     $postdate.className = "postdate";
+    
     var title = document.createTextNode(post.title);
     var text = document.createTextNode(post.content);
     var date = document.createTextNode(post.date);
-    
-   // var newTitle = document.querySelector("#inTitle").value;//
+
     $posttitle.appendChild(title);
     $posttextDiv.appendChild(text);
     $postdate.appendChild(date);
@@ -152,27 +189,38 @@ var renderSinglePost = function(post){
     document.querySelector('.container').appendChild($posttitle);
     document.querySelector('.container').appendChild($posttextDiv);
     document.querySelector('.container').appendChild($postdate);
+
 };
 
 
-// renders full* single view page including view post list button and title
+// renders full* single view PAGE including view post list button and title
 var singlePostView = function(post){
     var $blogTitle = document.createElement('h1');
-    $blogTitle.innerHTML="blog title*******";
+    $blogTitle.innerHTML="blog title***";
     $blogTitle.classList.add('blogtitle');
     document.querySelector('.container').appendChild($blogTitle);
     
     var $switchbutton = document.createElement("button");
     $switchbutton.type ="button";
-    $switchbutton.innerHTML = "switch button";
+    $switchbutton.innerHTML = "next post";
     
     $switchbutton.setAttribute("href", post.id);
     $switchbutton.addEventListener('click', function(e){ //idk if need seperate to controller
         nextpost(post.id);
         console.log(post.id);
     });
+    
+    var $deletebtn = document.createElement("BUTTON");
+    var erase = document.createTextNode("X");
+    $deletebtn.appendChild(erase);
+    document.querySelector('.container').appendChild($deletebtn);
+    
+    $deletebtn.addEventListener('click', function(e){
+        deletePost(post);
+    });  ///////deletepost
+    
     document.querySelector('.container').appendChild($switchbutton);
-    renderSinglePost(post);
+    renderSinglePost(post); 
     
 };
 
@@ -185,6 +233,7 @@ var makePreview = function(post, postListContainer){
     var headDiv = document.createElement("DIV");
     headDiv.className = "posthead";
     var link = document.createElement("a");
+    //console.log("undefined post: " + post);
     link.setAttribute("href", "#post" + post.id); //update later..
     
     postDiv.setAttribute('id', "#post" + post.id);
@@ -213,20 +262,16 @@ var makePreview = function(post, postListContainer){
 };
 
 
-//render post list
+//render post list (previews of all posts)
 var renderPostList = function(postList){
     var postListContainer = document.createElement("div");
     postListContainer.setAttribute('id', '#postListContainer');
     container.appendChild(postListContainer);
-    for(var i = 0; i<postList.length; i++){// var i = postLID
-        //console.log(postListTest[i].title);
+    for(var i = postList.length-1; i>=0; --i){
         makePreview(postList[i], postListContainer);
         console.log(postLID);
     }
 };
-
-
-
 
 
 
@@ -274,6 +319,7 @@ var handleHash = function(){
           console.log("hom");
         }
         console.log(postId);
+        
 };
 
 window.addEventListener("hashchange", handleHash);
@@ -310,11 +356,6 @@ var nextpost = function(postIndex){
        };
        
 
-
-
-
-
-
 //save new post input from modal
 var savePost = function(){
   console.log("save post called");
@@ -323,14 +364,13 @@ var savePost = function(){
     var newAuthor = "Shakespeare";
     
     if (newText.length > 0 && newTitle.length >0){
-     addPost(newId(), newTitle, newText, newAuthor); //newId()
+     addPost(newId(), newTitle, newText, newAuthor);
      console.log("title: " + newTitle);
      console.log("called addPost!");
     }else{
         return 0;
     }
-     //add date and author later
-     //assign specific link to post
+  
      
     
 };
@@ -351,8 +391,9 @@ document.querySelector('#addPost').addEventListener('click', overlay);
 
 //renderPostList(postList);
 //renderSinglePost(postTest);
-loadPostsFromDB();
+//loadPostsFromDB();
 //loadPostFromJSON({"author":"me", "content": "this is added on each refresh", "id":0,"title":"default post"});
+
 
 
 
