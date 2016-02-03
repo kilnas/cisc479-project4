@@ -67,7 +67,10 @@ Post.prototype.toString = function(){
     };
     
 Post.prototype.getPreviewText = function(){
-        return this.content.slice(0, PREVIEWCHARLIMIT);
+        if (this.content.length > PREVIEWCHARLIMIT){
+            return this.content.slice(0, PREVIEWCHARLIMIT) + "...";
+        }
+        else{return this.content;}
     };
     
 
@@ -183,7 +186,8 @@ var renderSinglePost = function(post){
     var date = document.createTextNode(post.date);
 
     $posttitle.appendChild(title);
-    $posttextDiv.appendChild(text);
+    //$posttextDiv.appendChild(text); //uncomment to return to plain text submissions
+    $posttextDiv.innerHTML=post.content; //note: this allows embedded links but "unsafe"
     $postdate.appendChild(date);
 
     document.querySelector('.container').appendChild($posttitle);
@@ -210,6 +214,17 @@ var singlePostView = function(post){
         console.log(post.id);
     });
     
+    
+    var $prevbutton = document.createElement("button");
+    $prevbutton.type ="button";
+    $prevbutton.innerHTML = "previous post";
+    
+    $prevbutton.setAttribute("href", post.id);
+    $prevbutton.addEventListener('click', function(e){ //idk if need seperate to controller
+        previouspost(post.id);
+        console.log(post.id);
+    });
+    
     var $deletebtn = document.createElement("BUTTON");
     var erase = document.createTextNode("X");
     $deletebtn.appendChild(erase);
@@ -219,7 +234,9 @@ var singlePostView = function(post){
         deletePost(post);
     });  ///////deletepost
     
+    document.querySelector('.container').appendChild($prevbutton);
     document.querySelector('.container').appendChild($switchbutton);
+    
     renderSinglePost(post); 
     
 };
@@ -249,7 +266,8 @@ var makePreview = function(post, postListContainer){
     //NOTE: this only works on instantiated Post objects, NOT JSON objects
     var text = document.createTextNode(post.getPreviewText());
     //body
-    para.appendChild(text);
+    para.innerHTML = post.getPreviewText(); //note: allows embedded links but unsafe
+    //para.appendChild(text); //uncomment to return to plain text submission
     bodyDiv.appendChild(para);
     //head 
     h2.appendChild(title);
@@ -355,23 +373,49 @@ var nextpost = function(postIndex){
           
        };
        
+var previouspost = function(postIndex){
+    
+            //postIndex = (postIndex - 1) % postList.length;
+            
+            if(postIndex > 0){
+                postIndex = postIndex - 1
+            }else{
+                postIndex = postList.length - 1;
+            }
+            
+            document.location = "#post" + postIndex;
+          //loadSinglePost(postList[postIndex].id);
+          //postIndex = (postIndex + 1) % postList.length;
+          
+       };
+       
 
 //save new post input from modal
 var savePost = function(){
   console.log("save post called");
+    //tinyMCE.triggerSave();
     var newTitle = document.querySelector("#inTitle").value;
     var newText = document.querySelector("#inText").value;
     var newAuthor = "Shakespeare";
     
-    if (newText.length > 0 && newTitle.length >0){
-     addPost(newId(), newTitle, newText, newAuthor);
-     console.log("title: " + newTitle);
-     console.log("called addPost!");
+     if (newText.length > 0 && newTitle.length >0){
+         
+        //This should reject any use of angle brackets except for iframes
+            var angles = new RegExp(/<[^>]*>/);
+            var frames = new RegExp(/<iframe.*?>/);
+        if(angles.exec(newText) && (!(frames.test(newText)))){
+             newText = '';
+             console.log("what a douche");
+             return 0;
+         }else
+         addPost(newId(), newTitle, newText, newAuthor);
+         console.log("title: " + newTitle);
+         console.log("called addPost!");
+         
+         
     }else{
         return 0;
-    }
-  
-     
+        }
     
 };
 

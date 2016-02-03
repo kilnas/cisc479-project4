@@ -7,6 +7,8 @@
         <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
         <link id="pagestyle" type="text/css" href="css/style.css" rel="stylesheet"/>
         
+         <!--<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+          <script>tinymce.init({ selector:'textarea' });</script>-->
     </head>
     
     <body id="pagenum">
@@ -69,17 +71,9 @@
         <div class="overlay">
             <div class="modal">
                 <form class="modalform">
-                    <select>
-                        Theme
-                        <option>
-                            Theme1
-                        </option>
-                        <option>
-                            Theme2
-                        </option>
-                    </select>
                     <input type="text" placeholder="Title" id="inTitle"/>
                     <textarea placeholder= "dear diary..." id="inText"></textarea>
+                    <div id="textDiv"></div>
                     
                 </form>
                 <button type="button" id="modalsave">
