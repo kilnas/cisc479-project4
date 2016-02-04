@@ -1,8 +1,9 @@
 var sheetIndex = 0;
-    var themes = [
+var themes = [
     "css/style.css",
-    "css/style2.css",
-    'css/AHH.css'
+    "css/white-paper.css",
+    'css/AHH.css',
+    "css/style3.css"
     ];
     
     var currentTheme = 'style';
@@ -13,6 +14,8 @@ var sheetIndex = 0;
         var linkId = themeName.replace(/\s/g, '');
         return linkId;
     }
+    
+    console.log(themes);
     
     
     var dropdown = document.getElementById('theme-dropdown');

@@ -154,20 +154,24 @@ var loadPostFromJSON = function(object){
 var deletePost = function(post){
     console.log("post id =" +post.id);
     
-    alert(post.title+" has been deleted");       
-    deletePostFromDB(post);
-    postList.splice(post.id,1);
- 
-    console.log("deleted id="+post.id);
-    //go back to homepage after deletion
-    homepage(postList);
+    var d = confirm("delete fr, tho?");
+    
+    if (d == true){
+        alert(post.title+" has been deleted");       
+        deletePostFromDB(post);
+        postList.splice(post.id,1);
+     
+        console.log("deleted id="+post.id);
+        //go back to homepage after deletion
+        homepage(postList);
+    }
+    else{
+        return 0;
+    }
 
     
 };
 
-
-
-//edit post ?
 
 
 //VIEW-----------------------------------------------------------------------------------------
@@ -403,9 +407,11 @@ var savePost = function(){
         //This should reject any use of angle brackets except for iframes
             var angles = new RegExp(/<[^>]*>/);
             var frames = new RegExp(/<iframe.*?>/);
-        if(angles.exec(newText) && (!(frames.test(newText)))){
+            var breaks = new RegExp(/<br.*?>/);
+            
+        if(angles.exec(newText) && (!(frames.test(newText))) && (!(breaks.test(newText)))){
              newText = '';
-             console.log("what a douche");
+             console.log("what a scrub");
              return 0;
          }else
          addPost(newId(), newTitle, newText, newAuthor);

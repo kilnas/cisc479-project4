@@ -60,7 +60,7 @@ nav ul li a{
 
 
 #right-nav{
-    width: 50%;
+    width: 30%;
     float: right;
     list-style-type:none;
     
@@ -204,9 +204,5 @@ nav ul li a{
     font-size: 11px;
 }
 
-/*FULL POST
-============================*/
-#fullpost{
-    visibility:hidden;
-    
-}
+
+
