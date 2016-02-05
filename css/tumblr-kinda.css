@@ -1,10 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/css?family=Bree+Serif);
 
 body{
      font-family: 'Montserrat',sans-serif;
-     color: #333;
+     color: #444;
      margin:0;
-     background-color:#fffbfc;
+     background-color:#36465d;
 }
 
 a{
@@ -16,8 +17,9 @@ a{
 }
 
 a:hover{
-    border-color: #333;
-    
+    border-color: #9aa2ae;
+     color: #333;
+   
     
 }
 
@@ -29,10 +31,10 @@ nav{
     padding: 0;
     width: 100%;
     height:50px;
-    background-color:lavenderblush;
-   
-   box-shadow: 0 2px 10px 0 #999;
-   z-index: 5;
+    background-color:#36465d;
+    border-bottom: solid 1px #4a586d;
+    /**box-shadow: 0 2px 10px 0 #999; **/
+       z-index: 5;
    
 }
 
@@ -50,11 +52,17 @@ nav ul li a{
 
 }
 
+nav ul li a:hover{
+     color: #333;
+}
+
+
 
 #left-nav{
     width: 40%;
      list-style-type:none;
      float: left;
+     color:#9aa2ae;
     
 }
 
@@ -63,9 +71,29 @@ nav ul li a{
     width: 50%;
     float: right;
     list-style-type:none;
+    color:#9aa2ae;
+}
+
+#right-nav a{
+    color:#9aa2ae;
+}
+
+#addPost{
+    background-color: #529ecc;
+    font-size: 1.1em;
+    top:7px;
+    padding:10px;
+    padding-top:5px;
+    padding-bottom:0px;
+    margin-right:5px;
+    margin-bottom:8px;
     
 }
 
+#addPost a{
+    color:#36465d !important;
+}
+    
 /*------------------ dropdown theme ------------------- */
 
 
@@ -76,9 +104,11 @@ nav ul li a{
     padding-left: 30px;
     padding-top: 0;*/
     padding-left: 22px;
-   
     position: relative;
     display: inline-block;
+    color:#9aa2ae;
+    background-color:#36465d;
+    
     
 
 }
@@ -99,6 +129,7 @@ nav ul li a{
     left: -5px;
     background-color: #f9f9f9;
     min-width: 120px;
+    border-radius: 4px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     padding: 12px 16px;
     z-index: 1;
@@ -111,12 +142,12 @@ nav ul li a{
     display: inline-block;
     border-bottom: 1px solid transparent;
     transition: all ease .5s;
-    color: #333;
+    
 }
 
 #themeSelect:hover{
-    border-color:#333;
-  
+    color: white;
+    border-color:#9aa2ae;
 }
 
 #switchtheme:hover #theme-dropdown{
@@ -125,7 +156,12 @@ nav ul li a{
 }
 
 .selectedTheme{
-    color: pink;
+    color:#529ecc;
+}
+
+.selectedTheme:hover{
+    color:#529ecc;
+    border-color:transparent;
 }
 
 
@@ -136,7 +172,7 @@ nav ul li a{
 
 .container{
     position:relative;
-    width:60%;
+    width:45%;
     margin: 0 auto;
     top:50px;
 }
@@ -147,14 +183,28 @@ footer{
 }
 .blogtitle,
 .posttitle{
+    font-family: 'Bree Serif', serif;
+    color:#fff;
+    background-color:transparent;
+    text-transform:lowercase;
     text-align:center;
     margin-top: 15px;
+    
+}
+
+.blogtitle:after,
+.posttitle:after{
+    content: '.';
 }
 
 .post{
-    border: solid 1px #f5dce3;
-    border-radius: 15px;
+    border: solid 1px #4a586d;
+    border-radius: 4px;
     margin-bottom:20px;
+    height: 200px;
+    background-color: #fff;
+    font-size:20px;
+    
 }
 
 .post p{
@@ -163,9 +213,9 @@ footer{
 }
 
 .posthead{
-    width:99%;
-    border-bottom: solid 1px #f5dce3;
-    padding-left:10px;
+    width:95%;
+    padding-left:5%;
+    background-color:fff;
     
 }
 
@@ -186,17 +236,18 @@ footer{
     height:100%;
     text-align:center;
     z-index: 10;
-    background-color:rgba(15, 15, 15, 0.2);
+    background-color:rgb(15, 15, 15, 0.2);
+
 }
 
 .modal{
     width:300px;
     margin: 100px auto;
     padding:10px;
-    border: solid 1px #f5dce3;
-    background-color:#fffbfc;
-    border-radius: 15px;
+    background-color:#fff;
+    border-radius: 4px;
     text-align:center;
+    border: solid 1px #999;
     position:fixed;
     left: 50%;
     margin-left: -150px;
@@ -204,6 +255,33 @@ footer{
 
 .modal button{
     appearance: none;
+
+}
+
+#modalsave{
+    appearance:none;
+    border:none;
+    color:#fff;
+    background-color: #529ecc;
+    font-size: 1.1em;
+    top:7px;
+    padding:10px;
+    padding-top:5px;
+    border-radius:4px;
+    padding-bottom:0px;
+    margin-right:5px;
+    margin-bottom:8px;
+}
+.modal input,
+.modal textarea{
+    appearance:none;
+    border:none;
+    float: left;
+}
+
+.modal input{
+    font-size: 2em;
+    width:100%;
 }
 #inText{
     height: 100px;
@@ -220,4 +298,38 @@ footer{
 #fullpost{
     visibility:hidden;
     
+}
+
+.posttext{
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 19px;
+    font-size:20px;
+}
+
+.postdate{
+    text-align: right;
+    color: #9aa2ae;
+    line-height:36px;
+}
+.blogtitle{
+    visibility:hidden;
+}
+.container button{
+    appearance:none;
+    padding:5px;
+    width: 125px;
+    color: #444;
+    margin-right: 25px;
+    margin-left:25px;
+    font-size: 16px;
+    border-style: none;
+    background-color: #9aa2ae;
+    border-radius: 4px;
+    transition: all ease .5s;
+    color: #333;
+}
+
+.container button:hover{
+    background-color:#f2f2f2;
 }

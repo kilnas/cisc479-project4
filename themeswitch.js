@@ -1,10 +1,9 @@
 var sheetIndex = 0;
 var themes = [
     "css/style.css",
-    "css/style2.css",
+    "css/tumblr-kinda.css",
     "css/white-paper.css",
-    "css/whiter-paper.css",
-    'css/for-ants.css',
+    "css/eye-burn.css",
     "css/sky.css",
     "css/vamp.css"
     ];
