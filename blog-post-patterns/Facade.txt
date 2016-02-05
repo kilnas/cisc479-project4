@@ -5,3 +5,4 @@ In the demonstration, the main function is drawDots, but the implemntation is wr
 
 <iframe height='268' scrolling='no' src='//codepen.io/feralislatr/embed/Wrgpae/?height=268&theme-id=0&default-tab=result' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='http://codepen.io/feralislatr/pen/Wrgpae/'>Facade pattern</a> by Bri (<a href='http://codepen.io/feralislatr'>@feralislatr</a>) on <a href='http://codepen.io'>CodePen</a>.
 </iframe>
+-Bri

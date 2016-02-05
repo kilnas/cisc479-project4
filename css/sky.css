@@ -18,7 +18,7 @@ a{
     
 }
 
-a:hover{
+a:hover, .posthead a:hover{
     color: rgba(51,161,236, 0.6);
 }
 
@@ -178,7 +178,6 @@ nav ul li a{
     float: left;
     overflow: hidden;
     background-color: rgba(255,255,255, 0.2);
-    
 }
 
 .post p{
@@ -192,7 +191,10 @@ nav ul li a{
     padding-left:10px;*/
     padding-left: 5px;
     font-family: 'Sarina', sans-serif;
-    
+}
+
+.posthead a{
+    color: #e95f63;
 }
 
 /*balloons*/
@@ -259,6 +261,7 @@ nav ul li a{
 }
 .posttext{
     background-color: rgba(255,255,255, 0.2);
+    padding: 10px;
 }
 
 .postdate{
