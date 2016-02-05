@@ -2,8 +2,10 @@ var sheetIndex = 0;
 var themes = [
     "css/style.css",
     "css/white-paper.css",
-    'css/AHH.css',
-    "css/style3.css"
+    "css/whiter-paper.css",
+    'css/for-ants.css',
+    "css/sky.css",
+    "css/vamp.css"
     ];
     
     var currentTheme = 'style';
